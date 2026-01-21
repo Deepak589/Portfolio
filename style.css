@@ -61,3 +61,36 @@ footer {
   background: var(--accent);
   color: white;
 }
+
+/* Link Buttons */
+.links .btn-link {
+  padding: 10px 18px;
+  margin: 5px;
+  border-radius: 6px;
+  background: #f0f0f0;
+  color: #333;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: 1px solid #ccc;
+}
+
+.links .btn-link:hover {
+  background: #0077b5;
+  color: white;
+  border-color: #0077b5;
+  transform: translateY(-3px);
+}
+
+/* Highlight button (for LinkedIn post) */
+.links .highlight {
+  background: #0077b5;
+  color: white;
+  border-color: #0077b5;
+}
+
+.links .highlight:hover {
+  background: #005f8d;
+  border-color: #005f8d;
+}
+
