@@ -1,199 +1,1157 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Deepak Katukuri | Portfolio</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deepak Katukuri | Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050a14;
+    --surface: #0c1628;
+    --surface2: #111e35;
+    --navy: #1a2f52;
+    --blue: #2563eb;
+    --cyan: #06b6d4;
+    --glow: #3b82f6;
+    --text: #e2e8f0;
+    --muted: #8ba3c7;
+    --dim: #4a6080;
+    --accent: #f59e0b;
+    --red: #ef4444;
+    --border: rgba(37,99,235,0.25);
+    --mono: 'Space Mono', monospace;
+    --display: 'Syne', sans-serif;
+    --body: 'DM Sans', sans-serif;
+  }
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="style.css">
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  <!-- GSAP CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── STARFIELD ── */
+  #stars-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.1rem 3rem;
+    background: rgba(5,10,20,0.7);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    transition: background 0.3s;
+  }
+
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 1rem;
+    color: var(--cyan);
+    letter-spacing: 0.05em;
+  }
+
+  .nav-logo span { color: var(--accent); }
+
+  nav ul {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  nav ul a {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    position: relative;
+    transition: color 0.3s;
+  }
+
+  nav ul a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: 0;
+    width: 0; height: 1px;
+    background: var(--cyan);
+    transition: width 0.3s;
+  }
+
+  nav ul a:hover { color: var(--cyan); }
+  nav ul a:hover::after { width: 100%; }
+
+  /* ── LAYOUT ── */
+  main { position: relative; z-index: 1; }
+
+  section {
+    padding: 7rem 0;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 100%;
+    padding: 0 6rem;
+    padding-top: 5rem;
+  }
+
+  .hero-tag {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    color: var(--cyan);
+    letter-spacing: 0.2em;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+
+  .hero-name {
+    font-family: var(--display);
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    font-weight: 800;
+    line-height: 1.0;
+    color: #fff;
+    margin-bottom: 1rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.4s forwards;
+  }
+
+  .hero-name .highlight {
+    background: linear-gradient(135deg, var(--blue), var(--cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-title {
+    font-family: var(--mono);
+    font-size: 1.05rem;
+    color: var(--muted);
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.6s forwards;
+  }
+
+  .hero-title .typing {
+    color: var(--accent);
+    border-right: 2px solid var(--accent);
+    animation: blink 0.7s infinite;
+  }
+
+  .hero-desc {
+    max-width: 580px;
+    color: var(--muted);
+    font-size: 1.05rem;
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.8s forwards;
+  }
+
+  .hero-btns {
+    display: flex;
+    gap: 1rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 1s forwards;
+  }
+
+  .btn {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.8rem 2rem;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.3s;
+    cursor: pointer;
+    border: none;
+  }
+
+  .btn-primary {
+    background: var(--blue);
+    color: #fff;
+    box-shadow: 0 0 20px rgba(37,99,235,0.4);
+  }
+
+  .btn-primary:hover {
+    background: var(--cyan);
+    box-shadow: 0 0 30px rgba(6,182,212,0.5);
+    transform: translateY(-2px);
+  }
+
+  .btn-outline {
+    border: 1px solid var(--border);
+    color: var(--muted);
+    background: transparent;
+  }
+
+  .btn-outline:hover {
+    border-color: var(--cyan);
+    color: var(--cyan);
+    transform: translateY(-2px);
+  }
+
+  .hero-scroll {
+    margin-top: 4rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--dim);
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    opacity: 0;
+    animation: fadeUp 0.8s 1.2s forwards;
+  }
+
+  .scroll-line {
+    width: 40px; height: 1px;
+    background: var(--dim);
+    animation: scrollPulse 2s infinite;
+  }
+
+  /* ── SECTION HEADER ── */
+  .sec-header {
+    margin-bottom: 4rem;
+  }
+
+  .sec-label {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 0.75rem;
+  }
+
+  .sec-title {
+    font-family: var(--display);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.1;
+  }
+
+  .sec-line {
+    width: 60px; height: 3px;
+    background: linear-gradient(90deg, var(--blue), var(--cyan));
+    margin-top: 1rem;
+    border-radius: 2px;
+  }
+
+  /* ── ABOUT ── */
+  #about .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .about-text p {
+    color: var(--muted);
+    margin-bottom: 1.2rem;
+    font-size: 1.05rem;
+  }
+
+  .about-text p strong {
+    color: var(--text);
+  }
+
+  .about-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.8rem 1.5rem;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--blue), var(--cyan));
+    transform: scaleX(0);
+    transition: transform 0.4s;
+  }
+
+  .stat-card:hover::before { transform: scaleX(1); }
+  .stat-card:hover { border-color: var(--glow); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(37,99,235,0.15); }
+
+  .stat-num {
+    font-family: var(--display);
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--cyan);
+    line-height: 1;
+    margin-bottom: 0.4rem;
+  }
+
+  .stat-label {
+    font-size: 0.85rem;
+    color: var(--muted);
+    font-family: var(--mono);
+  }
+
+  /* ── EXPERIENCE ── */
+  .timeline {
+    position: relative;
+    padding-left: 2rem;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(180deg, var(--blue), transparent);
+  }
+
+  .tl-item {
+    position: relative;
+    margin-bottom: 3.5rem;
+    padding-left: 2.5rem;
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: all 0.6s;
+  }
+
+  .tl-item.visible { opacity: 1; transform: translateX(0); }
+
+  .tl-dot {
+    position: absolute;
+    left: -2.1rem;
+    top: 0.4rem;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--blue);
+    border: 2px solid var(--cyan);
+    box-shadow: 0 0 12px rgba(6,182,212,0.5);
+  }
+
+  .tl-date {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--cyan);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+  }
+
+  .tl-company {
+    font-family: var(--display);
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 0.2rem;
+  }
+
+  .tl-role {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+
+  .tl-bullets {
+    list-style: none;
+    padding: 0;
+  }
+
+  .tl-bullets li {
+    color: var(--muted);
+    font-size: 0.95rem;
+    padding: 0.3rem 0 0.3rem 1.4rem;
+    position: relative;
+  }
+
+  .tl-bullets li::before {
+    content: '▹';
+    position: absolute;
+    left: 0;
+    color: var(--blue);
+  }
+
+  /* ── SKILLS ── */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .skill-group {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    transition: all 0.3s;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .skill-group.visible { opacity: 1; transform: translateY(0); }
+  .skill-group:hover { border-color: var(--glow); box-shadow: 0 8px 30px rgba(37,99,235,0.15); }
+
+  .skill-icon {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .skill-group h3 {
+    font-family: var(--display);
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 1rem;
+  }
+
+  .skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .tag {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    background: rgba(37,99,235,0.12);
+    border: 1px solid rgba(37,99,235,0.3);
+    color: var(--muted);
+    padding: 0.3rem 0.7rem;
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+
+  .tag:hover {
+    background: rgba(6,182,212,0.15);
+    border-color: var(--cyan);
+    color: var(--cyan);
+  }
+
+  /* ── PROJECTS ── */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .proj-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    transition: all 0.4s;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(30px);
+    cursor: default;
+  }
+
+  .proj-card.visible { opacity: 1; transform: translateY(0); }
+
+  .proj-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 0%, rgba(37,99,235,0.08), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+
+  .proj-card:hover {
+    border-color: var(--glow);
+    transform: translateY(-6px);
+    box-shadow: 0 20px 50px rgba(37,99,235,0.2);
+  }
+
+  .proj-card:hover::after { opacity: 1; }
+
+  .proj-num {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--dim);
+    letter-spacing: 0.15em;
+    margin-bottom: 1rem;
+  }
+
+  .proj-emoji {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .proj-card h3 {
+    font-family: var(--display);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 0.8rem;
+  }
+
+  .proj-card p {
+    color: var(--muted);
+    font-size: 0.92rem;
+    margin-bottom: 1.2rem;
+    line-height: 1.65;
+  }
+
+  .proj-tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .proj-tech span {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--cyan);
+    border: 1px solid rgba(6,182,212,0.3);
+    padding: 0.2rem 0.6rem;
+    border-radius: 3px;
+  }
+
+  /* ── EDUCATION ── */
+  .edu-grid {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .edu-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--blue);
+    border-radius: 0 12px 12px 0;
+    padding: 2rem;
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+    transition: all 0.3s;
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+
+  .edu-card.visible { opacity: 1; transform: translateX(0); }
+  .edu-card:hover { border-left-color: var(--cyan); box-shadow: 0 8px 30px rgba(37,99,235,0.15); }
+
+  .edu-year {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--cyan);
+    min-width: 110px;
+    padding-top: 0.2rem;
+  }
+
+  .edu-info h3 {
+    font-family: var(--display);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 0.3rem;
+  }
+
+  .edu-info .inst {
+    color: var(--muted);
+    font-size: 0.92rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .edu-info .gpa {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--accent);
+  }
+
+  /* ── CERTIFICATIONS ── */
+  .certs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+
+  .cert-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    transition: all 0.3s;
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  .cert-card.visible { opacity: 1; transform: translateY(0); }
+  .cert-card:hover { border-color: var(--glow); transform: translateY(-3px); }
+
+  .cert-icon {
+    font-size: 1.6rem;
+    flex-shrink: 0;
+  }
+
+  .cert-card h4 {
+    font-family: var(--display);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 0.2rem;
+  }
+
+  .cert-card p {
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+
+  /* ── CONTACT ── */
+  #contact {
+    text-align: center;
+  }
+
+  #contact .contact-inner {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 5rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #contact .contact-inner::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle, rgba(37,99,235,0.07), transparent 50%);
+    animation: pulse 4s ease-in-out infinite;
+  }
+
+  #contact .contact-inner p {
+    color: var(--muted);
+    font-size: 1.05rem;
+    max-width: 500px;
+    margin: 0 auto 3rem;
+  }
+
+  .contact-links {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    padding: 0.9rem 1.8rem;
+    border-radius: 8px;
+    text-decoration: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    transition: all 0.3s;
+    background: var(--bg);
+  }
+
+  .contact-link:hover {
+    border-color: var(--cyan);
+    color: var(--cyan);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(6,182,212,0.15);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 3rem;
+    border-top: 1px solid var(--border);
+    color: var(--dim);
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes blink {
+    0%, 100% { border-color: transparent; }
+    50%       { border-color: var(--accent); }
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.4; }
+    50%       { opacity: 1; }
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50%       { transform: scale(1.1); }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-8px); }
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--navy); border-radius: 2px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--blue); }
+</style>
 </head>
 <body>
 
-<header>
-  <h1>Deepak Katukuri</h1>
-<p>
-Software Engineer | Machine Learning & Data Analytics Enthusiast <br>
-Hybrid Recommendation Systems | AI Agents | Insurance Tech
-</p>
+<canvas id="stars-canvas"></canvas>
 
-
-<div class="links animate">
-  <a href="mailto:deepakkatukuri@gmail.com" class="btn-link">Email</a>
-  <a href="https://github.com/Deepak589" target="_blank" class="btn-link">GitHub</a>
-
-  <!-- LinkedIn Profile -->
-  <a href="https://www.linkedin.com/in/deepak-katukuri-a92a4b183/" 
-     target="_blank" class="btn-link">
-     LinkedIn Profile
-  </a>
-
-  <!-- LinkedIn Post -->
-  <a href="https://www.linkedin.com/posts/deepak-katukuri-a92a4b183_deepak-katukuri-activity-7419819545642614784-u8al"
-     target="_blank" class="btn-link highlight">
-     LinkedIn Post
-  </a>
-</div>
-
-  <button id="theme-toggle">🌙 Dark Mode</button>
-</header>
-
-<section class="section">
-  <h2>About Me</h2>
-  <p>
-    I am a Software Engineer with hands-on experience in enterprise insurance
-    platforms and a strong academic and practical background in Machine Learning,
-    Data Analytics, and AI-driven systems.
-  </p>
-
-  <p>
-    I worked as a Full-Time Software Engineer at ValueMomentum, where I contributed
-    to P&C Insurance and Surety Bond applications using OneShield Policy
-    Administration Systems and PL/SQL using oracel databases.
-  </p>
-
-  <p>
-    Alongside my industry experience, I have built data-driven and AI-powered
-    solutions including Hybrid Recommendation Systems, AI Agents using relay.app,
-    deep learning medical imaging models, and time-series forecasting systems.
-  </p>
-</section>
-
-
-<section class="section">
-  <h2>Work Experience</h2>
-
-  <div class="card">
-    <h3>Software Engineer – ValueMomentum</h3>
-    <p><i>March 2022 – September 2024</i></p>
-    <ul>
-      <li>Developed and maintained P&C Insurance and Surety Bond applications.</li>
-      <li>Worked on Policy Administration Systems using OneShield.</li>
-      <li>Managed backend data using PL/SQL and optimized insurance workflows.</li>
-      <li>Collaborated across insurance domains for policy lifecycle management.</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <h3>Intern – SmartBridge (IBM Collaboration)</h3>
-    <p><i>June 2019 – July 2019</i></p>
-    <ul>
-      <li>Built a lung cancer prediction system using ML and deep learning.</li>
-      <li>Applied Random Forest, KNN, Decision Trees, Gradient Boosting, and Neural Networks.</li>
-      <li>Used IBM Watson AI services for model experimentation.</li>
-      <li>Visualized medical data using Matplotlib and Seaborn.</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <h3>Resource Manager – MeritTrac</h3>
-    <ul>
-      <li>Handled recruitment processes for TCS, Cognizant, and Wipro.</li>
-      <li>Performed resume screening, candidate shortlisting, and interview coordination.</li>
-      <li>Managed candidate databases and post-interview feedback workflows.</li>
-    </ul>
-  </div>
-</section>
-
-
-<section class="section">
-  <h2>Technical Skills</h2>
+<nav>
+  <div class="nav-logo">DK<span>.</span></div>
   <ul>
-    <li><b>Programming:</b> Python, Core Java, C++, PL/SQL</li>
-    <li><b>Machine Learning:</b> Scikit-learn, TensorFlow, PyTorch</li>
-    <li><b>Data Analytics:</b> Pandas, NumPy, Matplotlib, Seaborn, EDA</li>
-    <li><b>NLP & Recommenders:</b> TF-IDF, Count Vectorization, SVD, Cosine Similarity</li>
-    <li><b>AI Agents:</b> Workflow automation using Relay.app</li>
-    <li><b>Databases & Tools:</b> OneShield PAS, SQL, GitHub</li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact">Contact</a></li>
   </ul>
-</section>
+</nav>
 
+<main>
 
-<section class="section">
-  <h2>Projects</h2>
-
-  <div class="card">
-    <h3>Hybrid Movie Recommendation System</h3>
-    <p>
-      Designed a hybrid recommender combining content-based filtering
-      (TF-IDF, Count Vectorization, Cosine Similarity) and collaborative
-      filtering using SVD.
-    </p>
-    <p>
-      Evaluated performance using RMSE and MAE to ensure accurate user
-      rating predictions.
-    </p>
-  </div>
-
-  <div class="card">
-    <h3>AI Agents for Resume Screening (Relay.app)</h3>
-    <p>
-      Built agentic AI workflows to automate resume screening,
-      candidate ranking, and job-role matching.
-    </p>
-  </div>
-
-  <div class="card">
-    <h3>Intracranial Hemorrhage Detection</h3>
-    <p>
-      Developed a YOLO-based deep learning system to detect hemorrhage
-      from medical images with 98% accuracy.
-    </p>
-  </div>
-
-  <div class="card">
-    <h3>Cryptocurrency Time-Series Forecasting</h3>
-    <p>
-      Predicted weekly and monthly cryptocurrency prices using
-      ARIMA and SARIMA models.
-    </p>
-  </div>
-</section>
-
-
-<section class="section">
-  <h2>Education</h2>
-  <p>
-    <b>Bachelor of Technology – Computer Science & Engineering</b><br>
-    Marri Laxman Reddy College of Engineering Technology & Management<br>
-    GPA: 6.23 / 10.0 (2018 – 2022)
+<!-- ── HERO ── -->
+<section id="hero">
+  <p class="hero-tag">// Hello, World! — Welcome to my portfolio</p>
+  <h1 class="hero-name">Deepak<br><span class="highlight">Katukuri</span></h1>
+  <p class="hero-title">
+    <span id="typed-role"></span><span class="typing">&nbsp;</span>
   </p>
-  <p>
-    <b>Masters of science – Data Science</b><br>
-    University of Europe Germany<br>
-    2025 – currenly
+  <p class="hero-desc">
+    Backend Developer &amp; Data Scientist blending enterprise insurance tech with ML, 
+    AI agents, and deep learning. Currently pursuing MSc Data Science in Germany.
   </p>
-
-
+  <div class="hero-btns">
+    <a href="#projects" class="btn btn-primary">View Projects</a>
+    <a href="#contact" class="btn btn-outline">Get in Touch</a>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span>Scroll to explore</span>
+  </div>
 </section>
 
-
-<section class="section">
-  <h2>Certifications</h2>
-  <ul>
-    <li>PL/SQL Certification – Database Management</li>
-    <li>Core Java Certification – Software Development</li>
-    <li>OneShield Certification – P&C Insurance Applications</li>
-  </ul>
+<!-- ── ABOUT ── -->
+<section id="about">
+  <div class="sec-header">
+    <p class="sec-label">01 / About</p>
+    <h2 class="sec-title">Who I Am</h2>
+    <div class="sec-line"></div>
+  </div>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>I'm a <strong>Backend Software Engineer</strong> with 2.8+ years of industry experience at ValueMomentum, where I built and maintained enterprise-grade P&amp;C Insurance and Surety Bond applications using PL/SQL, Java, and the OneShield platform.</p>
+      <p>My passion lives at the intersection of <strong>software engineering and machine learning</strong> — I've built hybrid recommendation systems, autonomous AI agents, deep learning medical imaging models, and time-series forecasting tools.</p>
+      <p>Currently in <strong>Potsdam, Germany</strong> pursuing my MSc in Data Science at the University of Europe, expanding my expertise in advanced ML and AI systems.</p>
+    </div>
+    <div class="about-stats">
+      <div class="stat-card">
+        <div class="stat-num">2.8+</div>
+        <div class="stat-label">Years Experience</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">4</div>
+        <div class="stat-label">ML Projects</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">98%</div>
+        <div class="stat-label">Model Accuracy</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">3</div>
+        <div class="stat-label">Certifications</div>
+      </div>
+    </div>
+  </div>
 </section>
 
-<section class="section">
-  <h2>Extracurricular Activities</h2>
-  <ul>
-    <li>Basketball – Point Guard, Inter-College Tournaments</li>
-    <li>Organized Technical and Cultural Fests (Club-65)</li>
-  </ul>
+<!-- ── EXPERIENCE ── -->
+<section id="experience">
+  <div class="sec-header">
+    <p class="sec-label">02 / Experience</p>
+    <h2 class="sec-title">Work History</h2>
+    <div class="sec-line"></div>
+  </div>
+  <div class="timeline">
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <p class="tl-date">Mar 2022 — Sep 2024 &nbsp;·&nbsp; 2.8 Years</p>
+      <p class="tl-company">ValueMomentum</p>
+      <p class="tl-role">Backend Developer (PL/SQL, Java, OneShield)</p>
+      <ul class="tl-bullets">
+        <li>Developed and maintained P&amp;C Insurance and Surety Bond policy applications using the OneShield Policy Administration System (PAS).</li>
+        <li>Wrote and optimised complex PL/SQL procedures, functions, and triggers for Oracle-based backend systems.</li>
+        <li>Used Java to implement business logic and backend services within the OneShield platform.</li>
+        <li>Worked across policy administration, endorsements, and surety bond lifecycle management domains.</li>
+      </ul>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <p class="tl-date">Jun 2019 — Jul 2019</p>
+      <p class="tl-company">SmartBridge × IBM</p>
+      <p class="tl-role">Machine Learning Intern</p>
+      <ul class="tl-bullets">
+        <li>Built a lung cancer prediction model using Random Forests, KNN, Gradient Boosting, and Neural Networks.</li>
+        <li>Leveraged IBM Watson ML/AI capabilities to enhance model performance.</li>
+        <li>Visualized complex medical data patterns using Matplotlib and Seaborn.</li>
+      </ul>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <p class="tl-date">Duration Varied</p>
+      <p class="tl-company">MeritTrac</p>
+      <p class="tl-role">Resource Manager</p>
+      <ul class="tl-bullets">
+        <li>Led end-to-end recruitment coordination for TCS, Cognizant, and Wipro.</li>
+        <li>Screened resumes, managed candidate databases, and coordinated evaluation tests.</li>
+        <li>Facilitated successful placements for top engineering talent within renowned organisations.</li>
+      </ul>
+    </div>
+
+  </div>
 </section>
 
+<!-- ── PROJECTS ── -->
+<section id="projects">
+  <div class="sec-header">
+    <p class="sec-label">03 / Projects</p>
+    <h2 class="sec-title">What I've Built</h2>
+    <div class="sec-line"></div>
+  </div>
+  <div class="projects-grid">
 
-<footer class="animate">
-  <p>© 2026 Deepak Katukuri</p>
+    <div class="proj-card">
+      <p class="proj-num">PROJECT_01</p>
+      <span class="proj-emoji">🎬</span>
+      <h3>Hybrid Movie Recommendation System</h3>
+      <p>Combined collaborative filtering (SVD) and content-based methods (TF-IDF, Cosine Similarity) to build a personalized recommendation engine. Evaluated with RMSE and MAE metrics.</p>
+      <div class="proj-tech">
+        <span>Python</span><span>Scikit-learn</span><span>SVD</span><span>TF-IDF</span><span>Pandas</span>
+      </div>
+    </div>
+
+    <div class="proj-card">
+      <p class="proj-num">PROJECT_02</p>
+      <span class="proj-emoji">🤖</span>
+      <h3>AI Agents — Relay App</h3>
+      <p>Developed autonomous agentic workflows within the Relay ecosystem for resume screening, candidate ranking, and multi-step task automation. Enabled intelligent, low-manual-effort pipelines.</p>
+      <div class="proj-tech">
+        <span>AI Agents</span><span>Relay.app</span><span>Workflow Automation</span><span>NLP</span>
+      </div>
+    </div>
+
+    <div class="proj-card">
+      <p class="proj-num">PROJECT_03</p>
+      <span class="proj-emoji">🧠</span>
+      <h3>Intracranial Hemorrhage Detection</h3>
+      <p>Trained a YOLO deep learning model on RSNA radiological images to detect and classify intracranial hemorrhage with 98% accuracy — enabling AI-assisted time-critical diagnosis.</p>
+      <div class="proj-tech">
+        <span>YOLO</span><span>Python</span><span>TensorFlow</span><span>Deep Learning</span><span>RSNA</span>
+      </div>
+    </div>
+
+    <div class="proj-card">
+      <p class="proj-num">PROJECT_04</p>
+      <span class="proj-emoji">📈</span>
+      <h3>Cryptocurrency Time-Series Forecasting</h3>
+      <p>Applied ARIMA and SARIMA models to forecast cryptocurrency prices across weekly, monthly, and seasonal intervals. Tuned parameters to minimize prediction error across market conditions.</p>
+      <div class="proj-tech">
+        <span>Python</span><span>ARIMA</span><span>SARIMA</span><span>Pandas</span><span>Matplotlib</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── SKILLS ── -->
+<section id="skills">
+  <div class="sec-header">
+    <p class="sec-label">04 / Skills</p>
+    <h2 class="sec-title">Tech Stack</h2>
+    <div class="sec-line"></div>
+  </div>
+  <div class="skills-grid">
+    <div class="skill-group">
+      <div class="skill-icon">💻</div>
+      <h3>Languages</h3>
+      <div class="skill-tags">
+        <span class="tag">Python</span><span class="tag">Core Java</span>
+        <span class="tag">C++</span><span class="tag">PL/SQL</span><span class="tag">XML</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-icon">🤖</div>
+      <h3>Machine Learning</h3>
+      <div class="skill-tags">
+        <span class="tag">TensorFlow</span><span class="tag">PyTorch</span>
+        <span class="tag">Scikit-Learn</span><span class="tag">Hugging Face</span><span class="tag">YOLO</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-icon">📊</div>
+      <h3>Data &amp; Analytics</h3>
+      <div class="skill-tags">
+        <span class="tag">NumPy</span><span class="tag">Pandas</span>
+        <span class="tag">Matplotlib</span><span class="tag">Seaborn</span><span class="tag">EDA</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-icon">🛠</div>
+      <h3>Tools &amp; Platforms</h3>
+      <div class="skill-tags">
+        <span class="tag">GitHub</span><span class="tag">OneShield PAS</span>
+        <span class="tag">IBM Watson</span><span class="tag">Relay.app</span><span class="tag">Oracle DB</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-icon">🧩</div>
+      <h3>NLP &amp; Recommenders</h3>
+      <div class="skill-tags">
+        <span class="tag">TF-IDF</span><span class="tag">Cosine Similarity</span>
+        <span class="tag">SVD</span><span class="tag">Count Vectorization</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-icon">⚙️</div>
+      <h3>AI &amp; Agents</h3>
+      <div class="skill-tags">
+        <span class="tag">AI Agents</span><span class="tag">Workflow Automation</span>
+        <span class="tag">ARIMA</span><span class="tag">SARIMA</span><span class="tag">Deep Learning</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── EDUCATION ── -->
+<section id="education">
+  <div class="sec-header">
+    <p class="sec-label">05 / Education</p>
+    <h2 class="sec-title">Academic Background</h2>
+    <div class="sec-line"></div>
+  </div>
+  <div class="edu-grid">
+    <div class="edu-card">
+      <div class="edu-year">Sep 2025 — Present</div>
+      <div class="edu-info">
+        <h3>MSc Data Science</h3>
+        <p class="inst">University of Europe for Applied Sciences — Potsdam, Germany</p>
+        <p class="gpa">Currently Enrolled</p>
+      </div>
+    </div>
+    <div class="edu-card">
+      <div class="edu-year">Jun 2018 — Jul 2022</div>
+      <div class="edu-info">
+        <h3>BTech Computer Science &amp; Engineering</h3>
+        <p class="inst">Marri Laxman Reddy Institute of Technology &amp; Management — India</p>
+        <p class="gpa">GPA: 6.23 / 10.0</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-header" style="margin-top:4rem; margin-bottom:2rem;">
+    <p class="sec-label">06 / Certifications</p>
+    <h2 class="sec-title" style="font-size:1.8rem">Credentials</h2>
+    <div class="sec-line"></div>
+  </div>
+  <div class="certs-grid">
+    <div class="cert-card">
+      <span class="cert-icon">🗄️</span>
+      <div>
+        <h4>PL/SQL Certification</h4>
+        <p>Effective database schema design &amp; block programming</p>
+      </div>
+    </div>
+    <div class="cert-card">
+      <span class="cert-icon">☕</span>
+      <div>
+        <h4>Core Java Certification</h4>
+        <p>Project readiness &amp; software development</p>
+      </div>
+    </div>
+    <div class="cert-card">
+      <span class="cert-icon">🏛️</span>
+      <div>
+        <h4>OneShield Certification</h4>
+        <p>P&amp;C Insurance application development &amp; management</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTACT ── -->
+<section id="contact">
+  <div class="sec-header" style="text-align:center;">
+    <p class="sec-label">07 / Contact</p>
+    <h2 class="sec-title">Let's Connect</h2>
+    <div class="sec-line" style="margin:1rem auto 0;"></div>
+  </div>
+  <div class="contact-inner">
+    <p>Whether you have an opportunity, a project idea, or just want to say hello — my inbox is always open.</p>
+    <div class="contact-links">
+      <a href="mailto:deepakkatukuri@gmail.com" class="contact-link">
+        📧 deepakkatukuri@gmail.com
+      </a>
+      <a href="https://github.com/Deepak589" target="_blank" class="contact-link">
+        🐙 github.com/Deepak589
+      </a>
+      <a href="https://www.linkedin.com/in/deepak-katukuri-a92a4b183/" target="_blank" class="contact-link">
+        💼 LinkedIn Profile
+      </a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>Designed &amp; Built by Deepak Katukuri &nbsp;·&nbsp; © 2026</p>
 </footer>
 
-<script src="script.js"></script>
+<script>
+// ── STARFIELD ──────────────────────────────────────────────────────────────
+const canvas = document.getElementById('stars-canvas');
+const ctx = canvas.getContext('2d');
+let stars = [];
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', () => { resize(); initStars(); });
+
+function initStars() {
+  stars = Array.from({ length: 160 }, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 1.2 + 0.2,
+    speed: Math.random() * 0.15 + 0.03,
+    alpha: Math.random() * 0.6 + 0.2,
+    da: (Math.random() - 0.5) * 0.005
+  }));
+}
+initStars();
+
+function animateStars() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  stars.forEach(s => {
+    s.alpha += s.da;
+    if (s.alpha < 0.1 || s.alpha > 0.8) s.da *= -1;
+    s.y -= s.speed;
+    if (s.y < 0) { s.y = canvas.height; s.x = Math.random() * canvas.width; }
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(147,197,253,${s.alpha})`;
+    ctx.fill();
+  });
+  requestAnimationFrame(animateStars);
+}
+animateStars();
+
+// ── TYPING EFFECT ──────────────────────────────────────────────────────────
+const roles = [
+  'Backend Developer',
+  'Data Scientist',
+  'ML Engineer',
+  'AI Agent Builder',
+  'Insurance Tech Dev'
+];
+let ri = 0, ci = 0, deleting = false;
+const el = document.getElementById('typed-role');
+
+function type() {
+  const word = roles[ri];
+  el.textContent = deleting ? word.slice(0, ci--) : word.slice(0, ci++);
+  let delay = deleting ? 60 : 100;
+  if (!deleting && ci === word.length + 1) { delay = 1800; deleting = true; }
+  else if (deleting && ci === 0) { deleting = false; ri = (ri + 1) % roles.length; delay = 300; }
+  setTimeout(type, delay);
+}
+type();
+
+// ── SCROLL REVEAL ──────────────────────────────────────────────────────────
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll(
+  '.tl-item, .skill-group, .proj-card, .edu-card, .cert-card'
+).forEach(el => observer.observe(el));
+
+// ── SMOOTH NAV HIGHLIGHT ───────────────────────────────────────────────────
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('nav ul a');
+
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 200) current = s.id;
+  });
+  navLinks.forEach(a => {
+    a.style.color = a.getAttribute('href') === '#' + current
+      ? 'var(--cyan)' : '';
+  });
+});
+</script>
 </body>
 </html>
-
-
